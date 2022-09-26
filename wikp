@@ -1,0 +1,34 @@
+#!/snap/bin/node
+
+//returns paragraphs from a wikipedia link, stripped of reference numbers
+
+let urllib = require("urllib");
+let url = process.argv[2];
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+
+console.log("About to call urllib.request")
+urllib.request(url, { followRedirect: true }, function (error, data, response) {
+    console.log("Inside of urllib.request");
+    let body = data.toString();
+    // Simulate a document object model
+    let { document } = (new JSDOM(body)).window;
+
+
+    //grab all the paragraphs and references
+
+    let paragraphs = document.querySelectorAll("p");
+    let references = document.querySelectorAll(".reference");
+
+    //remove any references
+    references.forEach(function (reference) {
+        reference.remove();
+    });
+
+    //print out all paragraphs
+
+    paragraphs.forEach(function (paragraph) {
+        console.log(paragraph.textContent);
+    });
+
+});
