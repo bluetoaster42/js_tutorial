@@ -1,0 +1,22 @@
+#!/snap/bin/node
+
+let urllib = require("urllib");
+let Phrase = require("mhartl-palindrome");
+let url = 'https://cdn.learnenough.com/phrases.txt';
+
+console.log("about to call urllib.request");
+
+urllib.request(url, {followRedirect: true, method: "GET"}, function(error, data, response){
+    if(error){
+        console.log("whoops there's an error");
+    }
+    console.log("we're in urllib.request")
+    let body = data.toString();
+    console.log(body);
+    body.split("\n").forEach(function(line){
+        let phrase = new Phrase(line);
+        if(phrase.palindrome()){
+            console.log("palindrome detected:", line);
+        }
+    });
+});
